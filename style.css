@@ -1,22 +1,13 @@
-body {
-  background-color: #121212;
-  color: #f0f0f0;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 20px;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-}
-#crypto-table {
-  margin-top: 20px;
-}
-.coin {
+
+.bubble {
+  background: linear-gradient(to right, #4f46e5, #6d28d9);
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 2px #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid #333;
+  align-items: center;
 }
-.coin.positive { color: #4caf50; }
-.coin.negative { color: #f44336; }
