@@ -1,0 +1,22 @@
+body {
+  background-color: #121212;
+  color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+#crypto-table {
+  margin-top: 20px;
+}
+.coin {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+.coin.positive { color: #4caf50; }
+.coin.negative { color: #f44336; }
