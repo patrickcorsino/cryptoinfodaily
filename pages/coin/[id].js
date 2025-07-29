@@ -6,15 +6,16 @@ export default function CoinDetail() {
   const { id } = router.query;
   const [coin, setCoin] = useState(null);
 
-  useEffect(() => {
-    if (!id) return;
-    async function fetchCoin() {
-      const res = await fetch(\`https://api.coingecko.com/api/v3/coins/\${id}\`);
-      const data = await res.json();
-      setCoin(data);
-    }
-    fetchCoin();
-  }, [id]);
+ useEffect(() => {
+  if (!id) return;
+  async function fetchCoin() {
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
+    const data = await res.json();
+    setCoin(data);
+  }
+  fetchCoin();
+}, [id]);
+
 
   if (!coin) return <div className="text-white p-6">Loading coin data...</div>;
 
