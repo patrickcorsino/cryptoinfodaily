@@ -1,45 +1,83 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import styles from '../../styles/CoinDetail.module.css';
+import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function CoinDetail() {
+export default function CoinDetailPage() {
   const router = useRouter();
   const { id } = router.query;
+
   const [coin, setCoin] = useState(null);
+  const [chartData, setChartData] = useState([]);
+  const [selectedChart, setSelectedChart] = useState('line');
 
   useEffect(() => {
     if (!id) return;
 
-    const fetchData = async () => {
+    const fetchCoinData = async () => {
       try {
-        const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
-        const data = await res.json();
-        setCoin(data);
+        const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
+        setCoin(res.data);
       } catch (err) {
-        console.error('Failed to fetch coin data:', err);
+        console.error('Error fetching coin details:', err);
       }
     };
 
-    fetchData();
+    const fetchChartData = async () => {
+      try {
+        const res = await axios.get(
+          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`
+        );
+        const formattedData = res.data.prices.map(([timestamp, price]) => ({
+          time: new Date(timestamp).toLocaleDateString(),
+          price,
+        }));
+        setChartData(formattedData);
+      } catch (err) {
+        console.error('Error fetching chart data:', err);
+      }
+    };
+
+    fetchCoinData();
+    fetchChartData();
   }, [id]);
 
-  if (!coin) return <div className={styles.loading}>Loading coin data...</div>;
+  if (!coin) return <div className="text-white">Loading...</div>;
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>{coin.name} ({coin.symbol.toUpperCase()})</h1>
-      <img src={coin.image.large} alt={coin.name} className={styles.image} />
+    <div className="p-6 text-white">
+      <h1 className="text-3xl font-bold mb-2">{coin.name} ({coin.symbol.toUpperCase()})</h1>
+      <p className="mb-4 text-gray-300">{coin.description.en?.split('. ')[0]}</p>
 
-      <p className={styles.description}>
-        {coin.description.en ? coin.description.en.split('. ')[0] + '.' : 'No description available.'}
-      </p>
-
-      <div className={styles.stats}>
-        <p><strong>Current Price:</strong> ${coin.market_data.current_price.usd.toLocaleString()}</p>
-        <p><strong>Market Cap:</strong> ${coin.market_data.market_cap.usd.toLocaleString()}</p>
-        <p><strong>24h Change:</strong> {coin.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-        <p><strong>Total Volume:</strong> ${coin.market_data.total_volume.usd.toLocaleString()}</p>
+      <div className="mb-4">
+        <button
+          onClick={() => setSelectedChart('line')}
+          className={`px-4 py-2 mr-2 ${selectedChart === 'line' ? 'bg-blue-600' : 'bg-gray-700'}`}
+        >
+          Line Chart
+        </button>
+        <button
+          onClick={() => setSelectedChart('candlestick')}
+          className={`px-4 py-2 ${selectedChart === 'candlestick' ? 'bg-blue-600' : 'bg-gray-700'}`}
+        >
+          Candlestick (Coming Soon)
+        </button>
       </div>
+
+      {selectedChart === 'line' && (
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData}>
+            <XAxis dataKey="time" />
+            <YAxis domain={['auto', 'auto']} />
+            <Tooltip />
+            <Line type="monotone" dataKey="price" stroke="#3b82f6" dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
+
+      {selectedChart === 'candlestick' && (
+        <div className="text-gray-400 mt-4">Candlestick chart coming soon!</div>
+      )}
     </div>
   );
 }
