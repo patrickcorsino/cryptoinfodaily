@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import styles from '@/Styles/CoinDetail.module.css';
 
-export default function CoinDetail() {
+const CoinDetail = () => {
   const router = useRouter();
   const { id } = router.query;
   const [coin, setCoin] = useState(null);
@@ -15,34 +14,32 @@ export default function CoinDetail() {
         const data = await res.json();
         setCoin(data);
       } catch (err) {
-        console.error('Error fetching coin data:', err);
+        console.error('Failed to fetch coin:', err);
       }
     };
     fetchCoin();
   }, [id]);
 
-  if (!coin) return <div className={styles.loading}>Loading...</div>;
+  if (!coin) return <p style={{ textAlign: 'center' }}>Loading coin details...</p>;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <img src={coin.image.large} alt={coin.name} className={styles.logo} />
-        <h1>{coin.name} ({coin.symbol.toUpperCase()})</h1>
-      </div>
+    <div className="coin-detail-container">
+      <h1>{coin.name} ({coin.symbol.toUpperCase()})</h1>
+      <img src={coin.image.large} alt={coin.name} width={80} />
+      <p>Rank: #{coin.market_cap_rank}</p>
+      <p>Current Price: ${coin.market_data.current_price.usd.toLocaleString()}</p>
+      <p>24h Change: {coin.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+      <p>Market Cap: ${coin.market_data.market_cap.usd.toLocaleString()}</p>
+      <p>Volume: ${coin.market_data.total_volume.usd.toLocaleString()}</p>
+      <p>Circulating Supply: {coin.market_data.circulating_supply.toLocaleString()}</p>
+      <p>Total Supply: {coin.market_data.total_supply?.toLocaleString() || 'N/A'}</p>
 
-      <div className={styles.stats}>
-        <p><strong>Current Price:</strong> ${coin.market_data.current_price.usd.toLocaleString()}</p>
-        <p><strong>Market Cap:</strong> ${coin.market_data.market_cap.usd.toLocaleString()}</p>
-        <p><strong>Total Volume:</strong> ${coin.market_data.total_volume.usd.toLocaleString()}</p>
-        <p><strong>24h High:</strong> ${coin.market_data.high_24h.usd}</p>
-        <p><strong>24h Low:</strong> ${coin.market_data.low_24h.usd}</p>
-        <p><strong>Price Change 24h:</strong> {coin.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-      </div>
-
-      <div className={styles.description}>
-        <h2>About {coin.name}</h2>
-        <div dangerouslySetInnerHTML={{ __html: coin.description.en }} />
+      <div style={{ marginTop: '30px' }}>
+        <h2>Description:</h2>
+        <div dangerouslySetInnerHTML={{ __html: coin.description.en.split('. ')[0] + '.' }} />
       </div>
     </div>
   );
-}
+};
+
+export default CoinDetail;
