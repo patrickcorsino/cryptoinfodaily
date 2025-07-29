@@ -1,12 +1,15 @@
-import styles from '@/Styles/Hero.module.css';
+import styles from '../styles/Hero.module.css';
 
-export default function Hero() {
+const Hero = () => {
   return (
     <section className={styles.hero}>
-      <div className={styles.overlay}>
-        <h1 className={styles.title}>CryptoInfoDaily</h1>
-        <p className={styles.subtitle}>Track market data in real time. Trade smarter.</p>
+      <div className={styles.backgroundBubbles}></div>
+      <div className={styles.content}>
+        <h1>Track, Trade & Triumph</h1>
+        <p>Your gamified crypto dashboard</p>
       </div>
     </section>
   );
-}
+};
+
+export default Hero;
