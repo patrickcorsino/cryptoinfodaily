@@ -1,45 +1,45 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import styles from '../../styles/CoinDetail.module.css';
 
-const CoinDetail = () => {
+export default function CoinDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [coin, setCoin] = useState(null);
 
   useEffect(() => {
     if (!id) return;
-    const fetchCoin = async () => {
+
+    const fetchData = async () => {
       try {
         const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const data = await res.json();
         setCoin(data);
       } catch (err) {
-        console.error('Failed to fetch coin:', err);
+        console.error('Failed to fetch coin data:', err);
       }
     };
-    fetchCoin();
+
+    fetchData();
   }, [id]);
 
-  if (!coin) return <p style={{ textAlign: 'center' }}>Loading coin details...</p>;
+  if (!coin) return <div className={styles.loading}>Loading coin data...</div>;
 
   return (
-    <div className="coin-detail-container">
-      <h1>{coin.name} ({coin.symbol.toUpperCase()})</h1>
-      <img src={coin.image.large} alt={coin.name} width={80} />
-      <p>Rank: #{coin.market_cap_rank}</p>
-      <p>Current Price: ${coin.market_data.current_price.usd.toLocaleString()}</p>
-      <p>24h Change: {coin.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-      <p>Market Cap: ${coin.market_data.market_cap.usd.toLocaleString()}</p>
-      <p>Volume: ${coin.market_data.total_volume.usd.toLocaleString()}</p>
-      <p>Circulating Supply: {coin.market_data.circulating_supply.toLocaleString()}</p>
-      <p>Total Supply: {coin.market_data.total_supply?.toLocaleString() || 'N/A'}</p>
+    <div className={styles.container}>
+      <h1 className={styles.title}>{coin.name} ({coin.symbol.toUpperCase()})</h1>
+      <img src={coin.image.large} alt={coin.name} className={styles.image} />
 
-      <div style={{ marginTop: '30px' }}>
-        <h2>Description:</h2>
-        <div dangerouslySetInnerHTML={{ __html: coin.description.en.split('. ')[0] + '.' }} />
+      <p className={styles.description}>
+        {coin.description.en ? coin.description.en.split('. ')[0] + '.' : 'No description available.'}
+      </p>
+
+      <div className={styles.stats}>
+        <p><strong>Current Price:</strong> ${coin.market_data.current_price.usd.toLocaleString()}</p>
+        <p><strong>Market Cap:</strong> ${coin.market_data.market_cap.usd.toLocaleString()}</p>
+        <p><strong>24h Change:</strong> {coin.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+        <p><strong>Total Volume:</strong> ${coin.market_data.total_volume.usd.toLocaleString()}</p>
       </div>
     </div>
   );
-};
-
-export default CoinDetail;
+}
