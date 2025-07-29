@@ -1,1 +1,0 @@
-// CoinTable component content
