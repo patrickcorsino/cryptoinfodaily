@@ -1,5 +1,4 @@
 import CoinTable from '../Components/CoinTable';
-import '../Styles/Globals.css';
 
 export default function Home() {
   return (
