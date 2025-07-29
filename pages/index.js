@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import CoinTable from '../Components/CoinTable';
 import '../Styles/Globals.css';
+import Hero from '../Components/hero';
+
 
 export default function Home() {
   return (
