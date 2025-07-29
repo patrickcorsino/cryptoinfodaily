@@ -10,7 +10,7 @@ export default function Home() {
         <meta name="description" content="Stay updated. Trade smart. Have fun." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-gradient-to-b from-[#0f172a] to-[#1e293b] min-h-screen text-white">
+      <main>
         <Hero />
         <CoinTable />
       </main>
