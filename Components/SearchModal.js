@@ -32,7 +32,7 @@ export default function SearchModal({ open, onClose }) {
         <ul className="mt-4 space-y-2 max-h-60 overflow-y-auto">
           {results.map(coin => (
             <li key={coin.id} className="text-white hover:underline">
-              <a href={\`/coin/\${coin.id}\`}>
+              <a href={`/coin/${coin.id}`}>
                 <div className="flex items-center gap-2">
                   <img src={coin.thumb} alt={coin.name} className="w-5 h-5" />
                   <span>{coin.name}</span>
