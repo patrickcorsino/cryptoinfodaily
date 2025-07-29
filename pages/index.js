@@ -1,26 +1,16 @@
 import Head from 'next/head';
-import CoinTable from '../Components/CoinTable';
-import FearGreed from '../Components/FearGreed';
-import TrendingCoins from '../Components/TrendingCoins';
-import DegenToggle from '../Components/DegenToggle';
-import Header from '../Components/Header';
+import CoinTable from '../components/CoinTable';
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Crypto Info Daily</title>
-        <meta name="description" content="Live crypto dashboard – gamified & addictive." />
+        <title>CryptoInfoDaily</title>
       </Head>
-      <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white px-4 py-6">
-        <Header />
-        <DegenToggle />
-        <div className="grid gap-6 md:grid-cols-2 mt-6">
-          <TrendingCoins />
-          <FearGreed />
-        </div>
+      <main className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 min-h-screen text-white p-6">
+        <h1 className="text-4xl font-bold mb-6 text-center neon-glow">Top 100 Cryptos</h1>
         <CoinTable />
-      </div>
+      </main>
     </>
   );
 }
