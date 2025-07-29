@@ -1,83 +1,49 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function CoinDetailPage() {
+const CoinDetail = () => {
   const router = useRouter();
   const { id } = router.query;
-
   const [coin, setCoin] = useState(null);
-  const [chartData, setChartData] = useState([]);
-  const [selectedChart, setSelectedChart] = useState('line');
 
   useEffect(() => {
     if (!id) return;
 
-    const fetchCoinData = async () => {
+    const fetchCoin = async () => {
       try {
-        const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
-        setCoin(res.data);
-      } catch (err) {
-        console.error('Error fetching coin details:', err);
-      }
-    };
-
-    const fetchChartData = async () => {
-      try {
-        const res = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
         );
-        const formattedData = res.data.prices.map(([timestamp, price]) => ({
-          time: new Date(timestamp).toLocaleDateString(),
-          price,
-        }));
-        setChartData(formattedData);
+        const data = await res.json();
+        setCoin(data);
       } catch (err) {
-        console.error('Error fetching chart data:', err);
+        console.error('Failed to fetch coin detail:', err);
       }
     };
 
-    fetchCoinData();
-    fetchChartData();
+    fetchCoin();
   }, [id]);
 
-  if (!coin) return <div className="text-white">Loading...</div>;
+  if (!coin) {
+    return <div className="text-center text-white mt-10">Loading...</div>;
+  }
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-3xl font-bold mb-2">{coin.name} ({coin.symbol.toUpperCase()})</h1>
-      <p className="mb-4 text-gray-300">{coin.description.en?.split('. ')[0]}</p>
-
-      <div className="mb-4">
-        <button
-          onClick={() => setSelectedChart('line')}
-          className={`px-4 py-2 mr-2 ${selectedChart === 'line' ? 'bg-blue-600' : 'bg-gray-700'}`}
-        >
-          Line Chart
-        </button>
-        <button
-          onClick={() => setSelectedChart('candlestick')}
-          className={`px-4 py-2 ${selectedChart === 'candlestick' ? 'bg-blue-600' : 'bg-gray-700'}`}
-        >
-          Candlestick (Coming Soon)
-        </button>
+    <div className="max-w-4xl mx-auto px-4 py-10 text-white">
+      <div className="flex items-center gap-4 mb-6">
+        <img src={coin.image.large} alt={coin.name} className="w-12 h-12" />
+        <h1 className="text-3xl font-bold">{coin.name} ({coin.symbol.toUpperCase()})</h1>
       </div>
-
-      {selectedChart === 'line' && (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData}>
-            <XAxis dataKey="time" />
-            <YAxis domain={['auto', 'auto']} />
-            <Tooltip />
-            <Line type="monotone" dataKey="price" stroke="#3b82f6" dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
-
-      {selectedChart === 'candlestick' && (
-        <div className="text-gray-400 mt-4">Candlestick chart coming soon!</div>
-      )}
+      <p className="text-gray-300 mb-4">{coin.description.en.split('. ')[0]}.</p>
+      <div className="bg-gray-900 p-6 rounded-xl shadow-lg space-y-4">
+        <div><strong>Current Price:</strong> ${coin.market_data.current_price.usd.toLocaleString()}</div>
+        <div><strong>Market Cap:</strong> ${coin.market_data.market_cap.usd.toLocaleString()}</div>
+        <div><strong>24h High:</strong> ${coin.market_data.high_24h.usd.toLocaleString()}</div>
+        <div><strong>24h Low:</strong> ${coin.market_data.low_24h.usd.toLocaleString()}</div>
+        <div><strong>Total Volume:</strong> ${coin.market_data.total_volume.usd.toLocaleString()}</div>
+      </div>
     </div>
   );
-}
+};
+
+export default CoinDetail;
