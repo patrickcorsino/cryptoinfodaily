@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Hero from '@/Components/Hero';
 import CoinTable from '@/Components/CoinTable';
 import { useEffect, useState } from 'react';
+import FearGreed from '../components/FearGreed'
+
 
 export default function Home() {
   const [coins, setCoins] = useState([]);
