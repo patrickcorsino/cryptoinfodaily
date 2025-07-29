@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import CoinTable from '../components/CoinTable';
-import FearGreed from '../components/FearGreed';
-import TrendingCoins from '../components/TrendingCoins';
-import DegenToggle from '../components/DegenToggle';
-import Header from '../components/Header';
+import CoinTable from '../Components/CoinTable';
+import FearGreed from '../Components/FearGreed';
+import TrendingCoins from '../Components/TrendingCoins';
+import DegenToggle from '../Components/DegenToggle';
+import Header from '../Components/Header';
 
 export default function Home() {
   return (
