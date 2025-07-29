@@ -1,37 +1,27 @@
-.tableSection {
-  padding: 2rem;
-  background-color: #111;
-  color: #fff;
+.row {
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.heading {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  text-align: center;
+.row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  overflow: hidden;
+.coin {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.table th, .table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #333;
+.logo {
+  width: 20px;
+  height: 20px;
 }
 
-.table th {
-  background-color: #222;
+.green {
+  color: #00ff88;
 }
 
-.positive {
-  color: #00e676;
-}
-
-.negative {
-  color: #ff1744;
+.red {
+  color: #ff4d4d;
 }
