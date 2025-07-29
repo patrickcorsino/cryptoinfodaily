@@ -1,56 +1,59 @@
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const CoinTable = () => {
   const [coins, setCoins] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=true&price_change_percentage=24h");
-      const data = await res.json();
-      setCoins(data);
+    const fetchCoins = async () => {
+      try {
+        const res = await fetch(
+          'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
+        );
+        const data = await res.json();
+        setCoins(data);
+      } catch (error) {
+        console.error('Error fetching coin data:', error);
+      }
     };
 
-    fetchData();
+    fetchCoins();
 
-    const interval = setInterval(fetchData, 30000); // auto-refresh every 30s
+    const interval = setInterval(() => {
+      fetchCoins();
+    }, 30000); // refresh every 30 seconds
+
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="coin-table">
-      <h2 className="text-2xl font-bold mb-4">Top 100 Cryptos</h2>
-      <table className="min-w-full bg-white rounded shadow">
+    <div className="overflow-x-auto mt-8">
+      <table className="min-w-full table-auto border-collapse">
         <thead>
-          <tr className="text-left border-b">
-            <th className="p-3">#</th>
-            <th className="p-3">Coin</th>
-            <th className="p-3">Price</th>
-            <th className="p-3">24h %</th>
-            <th className="p-3">Chart</th>
+          <tr className="bg-gray-900 text-white">
+            <th className="px-4 py-2 text-left text-sm">Name</th>
+            <th className="px-4 py-2 text-left text-sm">Symbol</th>
+            <th className="px-4 py-2 text-left text-sm">Price</th>
+            <th className="px-4 py-2 text-left text-sm">Market Cap</th>
           </tr>
         </thead>
         <tbody>
-          {coins.map((coin, i) => (
-            <tr key={coin.id} className="border-b hover:bg-gray-50 transition">
-              <td className="p-3">{i + 1}</td>
-              <td className="p-3 flex items-center gap-2">
-                <img src={coin.image} alt={coin.name} className="w-6 h-6" />
+          {coins.map((coin) => (
+            <tr key={coin.id} className="hover:bg-gray-800 transition-all">
+              <td className="px-4 py-2 text-sm font-medium">
                 <Link href={`/coin/${coin.id}`}>
-                  <span className="text-blue-600 hover:underline cursor-pointer">{coin.name}</span>
+                  <div className="flex items-center gap-2 cursor-pointer hover:underline">
+                    <img src={coin.image} alt={coin.name} className="w-6 h-6" />
+                    {coin.name}
+                  </div>
                 </Link>
               </td>
-              <td className="p-3">${coin.current_price.toLocaleString()}</td>
-              <td className={`p-3 ${coin.price_change_percentage_24h >= 0 ? "text-green-500" : "text-red-500"}`}>
-                {coin.price_change_percentage_24h.toFixed(2)}%
+              <td className="px-4 py-2 text-sm text-gray-400">{coin.symbol.toUpperCase()}</td>
+              <td className="px-4 py-2 text-sm text-green-400">
+                ${coin.current_price.toLocaleString()}
               </td>
-              <td className="p-3 w-32 h-10">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={coin.sparkline_in_7d.price.map((p, idx) => ({ pv: p, idx }))}>
-                    <Line type="monotone" dataKey="pv" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <td className="px-4 py-2 text-sm text-gray-300">
+                ${coin.market_cap.toLocaleString()}
               </td>
             </tr>
           ))}
