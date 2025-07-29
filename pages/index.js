@@ -1,7 +1,7 @@
 
 import Head from 'next/head'
-import Hero from '../Components/Hero'
-import CoinTable from '../Components/CoinTable'
+import Hero from '../components/Hero'
+import CoinTable from '../components/CoinTable'
 
 
 export default function Home() {
