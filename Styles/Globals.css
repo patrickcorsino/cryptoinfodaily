@@ -1,7 +1,32 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply bg-black text-white;
+  background: linear-gradient(to bottom right, #1e1e2f, #12121c);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+button:hover {
+  transform: scale(1.03);
+  transition: all 0.2s ease-in-out;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .flex-wrap-mobile {
+    flex-wrap: wrap;
+  }
 }
