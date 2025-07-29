@@ -1,49 +1,42 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
+
+const mockData = Array.from({ length: 100 }, (_, i) => ({
+  rank: i + 1,
+  name: `Coin ${i + 1}`,
+  symbol: `C${i + 1}`,
+  price: `$${(Math.random() * 1000).toFixed(2)}`,
+  change: `${(Math.random() * 20 - 10).toFixed(2)}%`,
+  marketCap: `$${(Math.random() * 1_000_000_000).toLocaleString()}`,
+  volume: `$${(Math.random() * 500_000_000).toLocaleString()}`
+}));
 
 export default function CoinTable() {
-  const [coins, setCoins] = useState([]);
-
-  useEffect(() => {
-    async function fetchCoins() {
-      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true');
-      const data = await res.json();
-      setCoins(data);
-    }
-    fetchCoins();
-  }, []);
-
   return (
-    <div className="mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Top 100 Cryptos</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto text-left bg-gray-800 rounded-lg shadow-md">
-          <thead className="bg-gray-700">
-            <tr>
-              <th className="px-4 py-2">#</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Price</th>
-              <th className="px-4 py-2">Market Cap</th>
-              <th className="px-4 py-2">24h %</th>
+    <div className="overflow-x-auto bg-black bg-opacity-40 rounded-lg shadow-lg">
+      <table className="min-w-full table-auto">
+        <thead className="bg-purple-800 text-white text-sm">
+          <tr>
+            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Price</th>
+            <th className="px-4 py-2">24h %</th>
+            <th className="px-4 py-2">Market Cap</th>
+            <th className="px-4 py-2">Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mockData.map(coin => (
+            <tr key={coin.rank} className="hover:bg-indigo-700 transition duration-200">
+              <td className="border px-4 py-2">{coin.rank}</td>
+              <td className="border px-4 py-2">{coin.name}</td>
+              <td className="border px-4 py-2">{coin.price}</td>
+              <td className="border px-4 py-2">{coin.change}</td>
+              <td className="border px-4 py-2">{coin.marketCap}</td>
+              <td className="border px-4 py-2">{coin.volume}</td>
             </tr>
-          </thead>
-          <tbody>
-            {coins.map((coin, index) => (
-              <tr key={coin.id} className="hover:bg-gray-600 transition-all">
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2 flex items-center gap-2">
-                  <img src={coin.image} alt={coin.name} className="w-6 h-6" />
-                  {coin.name}
-                </td>
-                <td className="px-4 py-2">${coin.current_price.toLocaleString()}</td>
-                <td className="px-4 py-2">${coin.market_cap.toLocaleString()}</td>
-                <td className={`px-4 py-2 ${coin.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {coin.price_change_percentage_24h.toFixed(2)}%
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
