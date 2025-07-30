@@ -1,10 +1,10 @@
 import '../styles/Globals.css';
-import { ThemeProvider } from '../context/ThemeContext';
+import { DegenProvider } from '../context/DegenContext';
 
 export default function App({ Component, pageProps }) {
   return (
-    <ThemeProvider>
+    <DegenProvider>
       <Component {...pageProps} />
-    </ThemeProvider>
+    </DegenProvider>
   );
 }
