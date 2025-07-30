@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Badge from './Badge'
+
+<Badge text="Trending" />
 
 const CoinTable = () => {
   const [coins, setCoins] = useState([]);
