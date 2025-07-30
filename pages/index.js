@@ -5,6 +5,7 @@ import CoinTable from '../components/CoinTable';
 import Navbar from '../components/Navbar';
 import { getTrendingCoins } from '../utils/api';
 import FearGreedPanel from '../components/FearGreedPanel';
+import DegenToggle from '../components/DegenToggle';
 
 export async function getServerSideProps() {
   const coins = await getTrendingCoins();
@@ -20,6 +21,7 @@ export default function Home({ coins }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar coins={coins} />
+    <DegenToggle />
       <main>
         <Hero />
     <Hero />
