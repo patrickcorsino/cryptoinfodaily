@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import CoinChart from '../components/CoinChart';
+// pages/coin/[id].js
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-const CoinDetail = () => {
+const CoinPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [coin, setCoin] = useState(null);
@@ -12,67 +20,48 @@ const CoinDetail = () => {
   useEffect(() => {
     if (!id) return;
 
-    const fetchCoin = async () => {
-      try {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-        );
-        const data = await res.json();
-        setCoin(data);
-      } catch (err) {
-        console.error('Failed to fetch coin detail:', err);
-      }
+    const fetchData = async () => {
+      const [coinRes, chartRes] = await Promise.all([
+        axios.get(`https://api.coingecko.com/api/v3/coins/${id}`),
+        axios.get(
+          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`
+        ),
+      ]);
+
+      setCoin(coinRes.data);
+      const formatted = chartRes.data.prices.map((entry) => ({
+        time: new Date(entry[0]).toLocaleDateString(),
+        price: entry[1],
+      }));
+      setChartData(formatted);
     };
 
-    const fetchChart = async () => {
-      try {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7&interval=daily`
-        );
-        const data = await res.json();
-        const formatted = data.prices.map(([timestamp, price]) => ({
-          date: new Date(timestamp).toLocaleDateString(),
-          price: price.toFixed(2),
-        }));
-        setChartData(formatted);
-      } catch (err) {
-        console.error('Failed to fetch chart data:', err);
-      }
-    };
-
-    fetchCoin();
-    fetchChart();
+    fetchData();
   }, [id]);
 
-  if (!coin) {
-    return <div className="text-center text-white mt-10">Loading...</div>;
-  }
+  if (!coin) return <div className="text-white p-4">Loading coin...</div>;
 
   return (
-    <CoinChart coinId={coin.id} />
-    <div className="max-w-4xl mx-auto px-4 py-10 text-white">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="p-6 text-white">
+      <div className="flex items-center gap-4 mb-4">
         <img src={coin.image.large} alt={coin.name} className="w-12 h-12" />
-        <h1 className="text-3xl font-bold">{coin.name} ({coin.symbol.toUpperCase()})</h1>
+        <h1 className="text-2xl font-bold">{coin.name}</h1>
       </div>
-      <p className="text-gray-300 mb-6">{coin.description.en.split('. ')[0]}.</p>
-
-      <div className="bg-gray-900 p-6 rounded-xl shadow-lg space-y-4 mb-10">
-        <div><strong>Current Price:</strong> ${coin.market_data.current_price.usd.toLocaleString()}</div>
-        <div><strong>Market Cap:</strong> ${coin.market_data.market_cap.usd.toLocaleString()}</div>
-        <div><strong>24h High:</strong> ${coin.market_data.high_24h.usd.toLocaleString()}</div>
-        <div><strong>24h Low:</strong> ${coin.market_data.low_24h.usd.toLocaleString()}</div>
-        <div><strong>Total Volume:</strong> ${coin.market_data.total_volume.usd.toLocaleString()}</div>
-      </div>
-
-      <h2 className="text-2xl font-semibold mb-4">Price History (7 Days)</h2>
-      <div className="bg-gray-900 p-4 rounded-xl">
-        <ResponsiveContainer width="100%" height={300}>
+      <p className="mb-4">{coin.description.en?.split(".")[0]}</p>
+      <h2 className="text-lg font-semibold mb-2">7 Day Price Chart</h2>
+      <div className="w-full h-64 bg-white bg-opacity-10 rounded-lg p-4">
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <XAxis dataKey="date" stroke="#ccc" />
-            <YAxis stroke="#ccc" />
+            <XAxis dataKey="time" />
+            <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="price" stroke="#00FF7F" strokeWidth={2} dot={false} />
+            <Line
+              type="monotone"
+              dataKey="price"
+              stroke="#00FF00"
+              dot={false}
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -80,4 +69,4 @@ const CoinDetail = () => {
   );
 };
 
-export default CoinDetail;
+export default CoinPage;
