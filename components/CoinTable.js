@@ -1,67 +1,55 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import SparklineChart from './SparklineChart';
-import Badge from './Badge';
+// components/CoinTable.js
+import React from "react";
+import Link from "next/link";
+import Badge from "./Badge";
 
-const CoinTable = ({ coins, isDegenMode }) => {
+const CoinTable = ({ coins, isDegen }) => {
   return (
-    <div className="bg-white dark:bg-[#121212] rounded-xl p-4 shadow-lg mt-4">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-        {isDegenMode ? '🔥 Degen Mode Coins' : 'Top Cryptocurrencies'}
-      </h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="text-sm text-gray-600 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700">
-              <th className="py-2 px-3">#</th>
-              <th className="py-2 px-3">Name</th>
-              <th className="py-2 px-3">Price</th>
-              <th className="py-2 px-3">24h %</th>
-              <th className="py-2 px-3">Market Cap</th>
-              <th className="py-2 px-3">7d Chart</th>
-            </tr>
-          </thead>
-          <tbody>
-            {coins?.map((coin, index) => (
-              <motion.tr
+    <div className="bg-white bg-opacity-5 backdrop-blur-lg rounded-xl p-4 overflow-x-auto shadow-md">
+      <table className="min-w-full text-sm text-white">
+        <thead>
+          <tr className="text-gray-300">
+            <th className="text-left p-2">#</th>
+            <th className="text-left p-2">Coin</th>
+            <th className="text-right p-2">Price</th>
+            <th className="text-right p-2">24h %</th>
+            <th className="text-right p-2">Market Cap</th>
+          </tr>
+        </thead>
+        <tbody>
+          {coins.map((coin, index) => {
+            const priceChange = coin.price_change_percentage_24h?.toFixed(2);
+            return (
+              <tr
                 key={coin.id}
-                whileHover={{ scale: 1.015 }}
-                className="transition duration-200 ease-in-out hover:bg-gray-100 dark:hover:bg-[#1f1f1f]"
+                className="hover:bg-white hover:bg-opacity-10 transition rounded-xl"
               >
-                <td className="py-3 px-3 text-sm text-gray-700 dark:text-gray-200">{index + 1}</td>
-                <td className="py-3 px-3 flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100">
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2 flex items-center gap-2">
                   <img src={coin.image} alt={coin.name} className="w-6 h-6" />
-                  <div className="flex flex-col">
-                    <span className="font-semibold">{coin.name}</span>
-                    <span className="text-xs text-gray-500 uppercase">{coin.symbol}</span>
-                  </div>
-                  {coin.isHot && <Badge type="hot" />}
-                  {coin.isTrending && <Badge type="trending" />}
-                  {coin.isNew && <Badge type="new" />}
+                  <Link href={`/coin/${coin.id}`}>
+                    <span className="hover:underline font-medium cursor-pointer">
+                      {coin.name}
+                    </span>
+                  </Link>
+                  {!isDegen && <Badge type="trending" />}
                 </td>
-                <td className="py-3 px-3 text-sm text-gray-800 dark:text-gray-100">
-                  ${coin.current_price?.toLocaleString() || 'N/A'}
-                </td>
+                <td className="text-right p-2">${coin.current_price.toLocaleString()}</td>
                 <td
-                  className={`py-3 px-3 text-sm font-semibold ${
-                    coin.price_change_percentage_24h > 0
-                      ? 'text-green-500'
-                      : 'text-red-500'
+                  className={`text-right p-2 ${
+                    priceChange < 0 ? "text-red-400" : "text-green-400"
                   }`}
                 >
-                  {coin.price_change_percentage_24h?.toFixed(2) || '0.00'}%
+                  {priceChange}%
                 </td>
-                <td className="py-3 px-3 text-sm text-gray-800 dark:text-gray-100">
-                  ${coin.market_cap?.toLocaleString() || 'N/A'}
+                <td className="text-right p-2">
+                  ${coin.market_cap.toLocaleString()}
                 </td>
-                <td className="py-3 px-3">
-                  <SparklineChart data={coin.sparkline_in_7d?.price || []} />
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
