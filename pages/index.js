@@ -1,18 +1,20 @@
-// pages/index.js
-import Head from 'next/head';
-import Hero from '../components/Hero';
-import CoinTable from '../components/CoinTable';
-import Navbar from '../components/Navbar';
-import { getTrendingCoins } from '../utils/api';
-import FearGreedPanel from '../components/FearGreedPanel';
-import DegenToggle from '../components/DegenToggle';
+import Head from 'next/head'
+import Navbar from '../components/Navbar'
+import Hero from '../components/Hero'
+import Search from '../components/Search'
+import CoinTable from '../components/CoinTable'
+import TrendingCoins from '../components/TrendingCoins'
+import FearGreedPanel from '../components/FearGreedPanel'
+import MarketStats from '../components/MarketStats'
+import { useState } from 'react'
 
-export async function getServerSideProps() {
-  const coins = await getTrendingCoins();
-  return { props: { coins } };
-}
+export default function Home() {
+  const [isDegenMode, setIsDegenMode] = useState(false)
 
-export default function Home({ coins }) {
+  const toggleDegenMode = () => {
+    setIsDegenMode(!isDegenMode)
+  }
+
   return (
     <>
       <Head>
@@ -20,34 +22,29 @@ export default function Home({ coins }) {
         <meta name="description" content="Stay updated. Trade smart. Have fun." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar coins={coins} />
-    <DegenToggle />
-      <main>
+
+      <div className={isDegenMode ? 'degen-mode' : ''}>
+        {/* Navbar with Toggle */}
+        <Navbar onToggleDegen={toggleDegenMode} isDegenMode={isDegenMode} />
+
+        {/* Search Modal */}
+        <Search />
+
+        {/* Main Hero Section */}
         <Hero />
-    <Hero />
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-  <div className="bg-white dark:bg-zinc-800 rounded-xl shadow p-4 hover:scale-105 transition-transform duration-300">
-    <h4 className="text-sm text-gray-500 dark:text-gray-400">Market Cap</h4>
-    <p className="text-lg font-bold text-gray-900 dark:text-white">$2.45T</p>
-  </div>
-  <div className="bg-white dark:bg-zinc-800 rounded-xl shadow p-4 hover:scale-105 transition-transform duration-300">
-    <h4 className="text-sm text-gray-500 dark:text-gray-400">24h Volume</h4>
-    <p className="text-lg font-bold text-gray-900 dark:text-white">$120B</p>
-  </div>
-  <div className="bg-white dark:bg-zinc-800 rounded-xl shadow p-4 hover:scale-105 transition-transform duration-300">
-    <h4 className="text-sm text-gray-500 dark:text-gray-400">BTC Dominance</h4>
-    <p className="text-lg font-bold text-gray-900 dark:text-white">51.2%</p>
-  </div>
-  <div className="bg-white dark:bg-zinc-800 rounded-xl shadow p-4 hover:scale-105 transition-transform duration-300">
-    <h4 className="text-sm text-gray-500 dark:text-gray-400">ETH Dominance</h4>
-    <p className="text-lg font-bold text-gray-900 dark:text-white">17.4%</p>
-  </div>
-</div>
+        {/* Section: Market Cap, BTC Dominance, Volume */}
+        <MarketStats />
 
-        <CoinTable coins={coins} />
-    <FearGreedPanel />
-      </main>
+        {/* Trending Coins Section */}
+        <TrendingCoins />
+
+        {/* Fear & Greed Index Panel */}
+        <FearGreedPanel />
+
+        {/* Coin Table */}
+        <CoinTable isDegenMode={isDegenMode} />
+      </div>
     </>
-  );
+  )
 }
