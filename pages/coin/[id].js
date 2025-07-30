@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import CoinChart from '../components/CoinChart';
 
 const CoinDetail = () => {
   const router = useRouter();
@@ -48,6 +49,7 @@ const CoinDetail = () => {
   }
 
   return (
+    <CoinChart coinId={coin.id} />
     <div className="max-w-4xl mx-auto px-4 py-10 text-white">
       <div className="flex items-center gap-4 mb-6">
         <img src={coin.image.large} alt={coin.name} className="w-12 h-12" />
