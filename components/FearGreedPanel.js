@@ -1,40 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// components/FearGreedPanel.js
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+
+const getColor = (value) => {
+  if (value < 25) return "text-red-500";
+  if (value < 50) return "text-yellow-500";
+  if (value < 75) return "text-green-400";
+  return "text-green-500";
+};
 
 const FearGreedPanel = () => {
   const [fearGreed, setFearGreed] = useState(null);
 
   useEffect(() => {
-    const fetchFG = async () => {
-      try {
-        const res = await axios.get('https://api.alternative.me/fng/?limit=1');
-        setFearGreed(res.data.data[0]);
-      } catch (error) {
-        console.error('Error fetching Fear & Greed data:', error);
-      }
+    const fetchData = async () => {
+      const { data } = await axios.get("https://api.alternative.me/fng/");
+      setFearGreed(data.data[0]);
     };
-
-    fetchFG();
+    fetchData();
   }, []);
 
-  if (!fearGreed) return null;
-
-  const level = parseInt(fearGreed.value, 10);
-  const sentiment = fearGreed.value_classification;
-
-  const bgColor =
-    level >= 80 ? 'bg-green-600' :
-    level >= 60 ? 'bg-green-500' :
-    level >= 40 ? 'bg-yellow-400' :
-    level >= 20 ? 'bg-orange-500' : 'bg-red-600';
-
   return (
-    <div className={`p-6 rounded-2xl shadow-xl text-white mt-8 ${bgColor} animate-pulse`}>
-      <h2 className="text-2xl font-bold text-center mb-2">Fear & Greed Index</h2>
-      <p className="text-center text-4xl font-black">{fearGreed.value}</p>
-      <p className="text-center text-lg uppercase tracking-wider">{sentiment}</p>
-      <p className="text-center text-sm mt-2 opacity-80">Updated: {fearGreed.timestamp}</p>
-    </div>
+    <motion.div
+      className="bg-white bg-opacity-5 backdrop-blur-lg p-4 rounded-2xl text-white text-center shadow-lg mb-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <h3 className="text-lg font-bold mb-1">📊 Fear & Greed Index</h3>
+      {fearGreed ? (
+        <>
+          <p className={`text-3xl font-bold ${getColor(fearGreed.value)}`}>
+            {fearGreed.value} - {fearGreed.value_classification}
+          </p>
+          <p className="text-sm text-gray-300 mt-1">
+            Last updated: {fearGreed.timestamp}
+          </p>
+        </>
+      ) : (
+        <p className="text-sm text-gray-400">Loading index...</p>
+      )}
+    </motion.div>
   );
 };
 
