@@ -14,3 +14,41 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.degen-mode {
+  background-color: #000000;
+  color: #00ff41;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.degen-mode a,
+.degen-mode h1,
+.degen-mode h2,
+.degen-mode h3,
+.degen-mode p,
+.degen-mode div,
+.degen-mode span {
+  color: #00ff41 !important;
+  text-shadow: 0 0 5px #00ff41;
+}
+
+.degen-mode .bg-white,
+.degen-mode .bg-gray-100,
+.degen-mode .bg-gray-200 {
+  background-color: #0f0f0f !important;
+}
+
+.degen-mode .text-black {
+  color: #00ff41 !important;
+}
+
+.degen-mode .shadow-xl {
+  box-shadow: 0 0 10px #00ff41;
+}
+
+.degen-mode input,
+.degen-mode select {
+  background-color: #0f0f0f;
+  color: #00ff41;
+  border: 1px solid #00ff41;
+}
