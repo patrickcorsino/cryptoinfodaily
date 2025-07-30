@@ -46,9 +46,10 @@ const CoinTable = () => {
               <td className="px-4 py-2 text-sm font-medium">
                 <Link href={`/coin/${coin.id}`}>
                   <div className="flex items-center gap-2 cursor-pointer hover:underline">
-                    <img src={coin.image} alt={coin.name} className="w-6 h-6" />
-                    {coin.name}
-                  </div>
+                  <img src={coin.image} alt={coin.name} className="w-6 h-6" />
+                  {coin.name}
+                 <Badge text="🔥 Hot" color="bg-red-500" />
+                 </div>
                 </Link>
               </td>
               <td className="px-4 py-2 text-sm text-gray-400">{coin.symbol.toUpperCase()}</td>
