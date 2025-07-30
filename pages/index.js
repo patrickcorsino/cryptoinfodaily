@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
-import Hero from "@/components/Hero";
-import StatsPanel from "@/components/StatsPanel";
-import TrendingCoins from "@/components/TrendingCoins";
-import FearGreedPanel from "@/components/FearGreedPanel";
-import CoinTable from "@/components/CoinTable";
-import Search from "@/components/Search";
-import DegenModeToggle from "@/components/DegenModeToggle";
+import Hero from "../components/Hero";
+import StatsPanel from "../components/StatsPanel";
+import TrendingCoins from "../components/TrendingCoins";
+import FearGreedPanel from "../components/FearGreedPanel";
+import CoinTable from "../components/CoinTable";
+import Search from "../components/Search";
+import DegenModeToggle from "../components/DegenModeToggle";
 
 export default function Home() {
   const [coins, setCoins] = useState([]);
