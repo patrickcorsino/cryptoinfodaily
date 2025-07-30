@@ -1,23 +1,17 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '@/context/ThemeContext';
+// components/DegenToggle.js
+import { useDegen } from '@/context/DegenContext';
 
-const DegenToggle = () => {
-  const { isDegenMode, toggleDegenMode } = useContext(ThemeContext);
+export default function DegenToggle() {
+  const { isDegenMode, toggleDegenMode } = useDegen();
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      <button
-        onClick={toggleDegenMode}
-        className={`px-4 py-2 rounded-full font-bold border-2 shadow-xl transition-all duration-300 ${
-          isDegenMode
-            ? 'bg-black border-green-500 text-green-400'
-            : 'bg-white border-gray-300 text-gray-800'
-        }`}
-      >
-        {isDegenMode ? 'Exit Degen Mode' : 'Enter Degen Mode'}
-      </button>
-    </div>
+    <button
+      onClick={toggleDegenMode}
+      className={`px-4 py-2 rounded-xl mt-4 text-sm font-bold transition-all duration-300 shadow-md ${
+        isDegenMode ? 'bg-green-600 text-black' : 'bg-gray-800 text-white'
+      }`}
+    >
+      {isDegenMode ? 'Exit Degen Mode' : 'Enter Degen Mode'}
+    </button>
   );
-};
-
-export default DegenToggle;
+}
