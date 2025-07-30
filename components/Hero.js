@@ -1,5 +1,10 @@
 import styles from '../styles/Hero.module.css';
 
+import Badge from './Badge'
+
+<Badge text="Trending" />
+
+
 const Hero = () => {
   return (
     <section className={styles.hero}>
