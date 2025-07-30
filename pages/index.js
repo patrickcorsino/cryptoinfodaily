@@ -3,7 +3,8 @@ import Head from 'next/head';
 import Hero from '../components/Hero';
 import CoinTable from '../components/CoinTable';
 import Navbar from '../components/Navbar';
-import { getTrendingCoins } from '@/utils/api';
+import { getTrendingCoins } from '../utils/api';
+import FearGreedPanel from '../components/FearGreedPanel';
 
 export async function getServerSideProps() {
   const coins = await getTrendingCoins();
@@ -43,6 +44,7 @@ export default function Home({ coins }) {
 </div>
 
         <CoinTable coins={coins} />
+    <FearGreedPanel />
       </main>
     </>
   );
