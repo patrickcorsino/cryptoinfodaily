@@ -7,6 +7,7 @@ body {
   font-family: 'Inter', sans-serif;
   background-color: #0f172a; /* dark navy blue */
   color: #f1f5f9; /* light gray-blue */
+  @apply bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white min-h-screen font-sans;
 }
 
 a {
